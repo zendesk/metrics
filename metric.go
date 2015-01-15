@@ -67,13 +67,19 @@ func escape(s string) string {
 func writeEscaped(b *bytes.Buffer, s string, addDelim bool) {
 	b.Grow(len(s) + 1)
 	for i := 0; i < len(s); i++ {
-		if ('A' <= s[i] && s[i] <= 'Z') || ('a' <= s[i] && s[i] <= 'z') || ('0' <= s[i] && s[i] <= '9') || s[i] == '_' || s[i] == '.' {
+		if ('A' <= s[i] && s[i] <= 'Z') || ('a' <= s[i] && s[i] <= 'z') || ('0' <= s[i] && s[i] <= '9') || s[i] == '_' || s[i] == '.' || s[i] == '-' {
 			b.WriteByte(s[i])
-		} else {
+		} else if isWhitespace(s[i]) {
 			b.WriteByte('_')
+		} else if s[i] == '/' {
+			b.WriteByte('-')
 		}
 	}
 	if addDelim {
 		b.WriteRune('.')
 	}
+}
+
+func isWhitespace(chr byte) bool {
+	return chr == ' ' || chr == '\t' || chr == '\v' || chr == '\r' || chr == '\n' || chr == '\f'
 }

@@ -53,10 +53,13 @@ func (s *CSuite) TestClientEmptyPrefix(c *C) {
 
 func (s *CSuite) TestEscapedMetrics(c *C) {
 	tests := []packet{
-		{"Gauge", "gauge:b", 1, 1.0, "test.gauge_b:1|g", false},
+		{"Gauge", "gauge:b", 1, 1.0, "test.gaugeb:1|g", false},
 		{"Inc", "count b", 1, 0.999999, "test.count_b:1|c|@0.999999", false},
-		{"Inc", "count<>b", 1, 1.0, "test.count__b:1|c", false},
-		{"Dec", "count~12", 1, 1.0, "test.count_12:-1|c", false},
+		{"Inc", "count<>b", 1, 1.0, "test.countb:1|c", false},
+		{"Dec", "count~12", 1, 1.0, "test.count12:-1|c", false},
+		{"Inc", "count-b", 1, 1.0, "test.count-b:1|c", false},
+		{"Inc", "count/b", 1, 1.0, "test.count-b:1|c", false},
+		{"Inc", "count.b-counter.api", 1, 1.0, "test.count.b-counter.api:1|c", false},
 	}
 
 	newClient := func(addr string) Client {
